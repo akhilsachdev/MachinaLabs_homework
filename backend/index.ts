@@ -1,8 +1,10 @@
 import express, { Express, Request, Response , Application } from 'express';
 import cors from 'cors';
 import mysql from 'mysql2/promise';
+import fs from 'fs'
 import path from 'path';
-import { readFileDirectory, replaceUuids } from './helper';
+import parser from 'csv-parse';
+import { handleCSVFile, handleJSONFile, handleLogFile, readFileDirectory, replaceUuids } from './helper';
 import { fetchUuidNameMappings, getName, fetchRevisionMappings, fetchTrialMappings } from './db';
 import dotenv from 'dotenv';
 
@@ -32,14 +34,22 @@ app.get('/api/v1/file_tree', async (req: Request, res: Response) => {
     res.send(initialTree);
 });
 
-app.get('/api/v1/revision_mappings', async (req: Request, res: Response) => {
-    const revisionMappings = await fetchRevisionMappings();
-    res.send(revisionMappings);
-});
-
-app.get('/api/v1/trial_mappings', async (req: Request, res: Response) => {
-    const trialMappings = await fetchTrialMappings();
-    res.send(trialMappings);
+app.post('/api/v1/read_file', (req: Request, res: Response) => {
+    const filePath = req.body.fileUrl
+    const ext = path.extname(filePath as string);
+    switch(ext) {
+        case '.csv':
+            handleCSVFile(filePath, res);
+            break;
+        case '.json':
+            handleJSONFile(filePath, res);
+            break;
+        case '.log':
+            handleLogFile(filePath, res);
+            break;
+        default:
+            res.status(500).send('File type not supported');
+    }
 });
 
 app.post('/testdbpost', async (req: Request, res: Response) => {

@@ -20,7 +20,6 @@ export const fetchUuidNameMappings = async () => {
             uuidNameMappings[result.uuid] = result.name;
         }
     }
-    console.log(uuidNameMappings);
     return uuidNameMappings;
     
 }
@@ -28,7 +27,6 @@ export const fetchUuidNameMappings = async () => {
 export const fetchTrialMappings = async () => {
     const db = await connection();
     const [results, fields] = await db.query(`Select r.name as trial_name, t.uuid as trial_id from part_revision r JOIN trial t ON t.part_revision_uuid = r.uuid`);
-    console.log(results);
     let trialMappings: { [key: string]: string } = {};
     for (const result of results as RowDataPacket[]) {
         trialMappings[result.trial_id] = result.trial_name;
