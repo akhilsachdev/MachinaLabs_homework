@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Papa from 'papaparse';
 import { ClipLoader } from "react-spinners";
+import { useReactTable } from "@tanstack/react-table";
 import Modal from 'react-modal';
+import Table from "./Table";
 
 Modal.setAppElement('#__next');
 
@@ -50,41 +52,14 @@ export default function FilePreview({ url }: FilePreviewProps) {
             a.click();
             document.body.removeChild(a);
         }
-
-
-
-
-        // try {
-        //     const body = {
-        //         fileUrl: url
-        //     }
-        //     const options = {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/json'
-        //         },
-        //         body: JSON.stringify(body)
-        //     }
-        //     const res = await fetch('http://localhost:8000/api/v1/download_file', options);
-        //     if (!res.ok) {
-        //         throw new Error('Failed to download file');
-        //     }
-        //     const data = await res.text();
-        // } catch (error) {
-        //     // Handle the error here
-        //     console.error(error);
-        // }
     }
 
 
     const handleCSV = (data: any) => {
         Papa.parse(data, {
             complete: (result) => {
-                if (url.includes("form_path")) {
-                    setContent(JSON.stringify(result.data.slice(8, 13), null, 2))
-                    return;
-                }
                 setContent(JSON.stringify(result.data.slice(0, 5), null, 2))
+                console.log(JSON.parse(JSON.stringify(result.data.slice(0, 5), null, 2)));
             },
             header: true,
         });
@@ -102,6 +77,8 @@ export default function FilePreview({ url }: FilePreviewProps) {
     const handleLog = (data: any) => {
         setContent(data);
     }
+
+
 
     useEffect(() => {
         
@@ -129,36 +106,43 @@ export default function FilePreview({ url }: FilePreviewProps) {
     }, [url, content, fileContent]);
 
     return (
-        <div className="flex justify-center items-center">
-            <button className="absolute top-10 right-10" onClick={downloadFile}>Download</button>
-            <div>
-                {loading ? 
-                <Modal 
-                isOpen={loading}
-                contentLabel="Loading Modal"
-                style={{
-                    overlay: {
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                    },
-                    content: {
-                        position: 'relative',
-                        top: 'auto',
-                        left: 'auto',
-                        right: 'auto',
-                        bottom: 'auto',
-                        textAlign: 'center',
-                    },
-                }}>
-                    <ClipLoader />
-                </Modal>
-                :
-                <pre>
-                    {content}
-                </pre>
-                }
+        <div>
+            <button onClick={downloadFile}>Download</button>
+            <div className="flex items-center justify-center">
+                <div>
+                    {loading ? 
+                    <Modal 
+                    isOpen={loading}
+                    contentLabel="Loading Modal"
+                    style={{
+                        overlay: {
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        },
+                        content: {
+                            position: 'relative',
+                            top: 'auto',
+                            left: 'auto',
+                            right: 'auto',
+                            bottom: 'auto',
+                            textAlign: 'center',
+                        },
+                    }}>
+                        <ClipLoader />
+                    </Modal>
+                    :
+                    <div>
+                        <pre>
+                            {content}
+                        </pre>
+                    </div>
+                    }
+                </div>
             </div>
         </div>
     )
 }
+
+
+                                
