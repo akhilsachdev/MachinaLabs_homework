@@ -1,11 +1,21 @@
-import Image from "next/image";
-import { Inter } from "next/font/google";
+import React, { useState } from "react";
 import FileTree from "@/components/FileTree";
-
-const inter = Inter({ subsets: ["latin"] });
+import FilePreview from "@/components/FilePreview";
 
 export default function Home() {
+
+  const [selectedFile, setSelectedFile] = useState('');
+
   return (
-    <FileTree />
+    <div className="flex flex-row">
+      <div className="w-1/2">
+        <FileTree onSelectFile={setSelectedFile} />
+      </div>
+      {selectedFile &&
+      <div className="w-1/2">
+        <FilePreview url={selectedFile} />
+      </div>
+      }
+    </div>
   );
 }
