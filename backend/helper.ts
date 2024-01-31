@@ -49,13 +49,10 @@ export const handleCSVFile = (filePath: any, res: Response) => {
             console.error(err);
             return res.status(500).send('Error reading CSV file');
         }
-        if (filePath.includes('form_path')) {
-            const lines = data.split('\n');
-            const csvData = lines.slice(7).join('\n');
-            res.type('text/csv').send(csvData);
-        } else {
-            res.type('text/csv').send(data);
-        }
+        const lines = data.split('\n');
+        const startIndex = lines.findIndex((line) => line.includes('PROG_START'));
+        const csvData = startIndex !== -1 ? lines.slice(startIndex+1).join('\n') : data;
+        res.type('text/csv').send(csvData);
     });
 };
   
