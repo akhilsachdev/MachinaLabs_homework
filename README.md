@@ -33,10 +33,31 @@ Our users are our Machina teammates who are doing the R&D for customers. We stor
 # Getting Started
 ### Installation
 - [Install](https://docs.docker.com/desktop/) and run Docker
+- Install npm and node if you haven't already by running `brew install node` on MacOS and use this [link](https://nodejs.org/en/download/) to for Windows
+
+### Setup
+- Open the files.zip file and move the files directory into the `backend` folder
+- If you're running the application without docker set the directory in `index.ts` to `./files` otherwise set it to `../files`
 
 ### Running the Application
-You can start the application as follows. The first time it runs, it will run `init.sql` to create tables and populate them with some seed data.  
+
+#### Frontend and Backend without Docker
+
+- Change directory into frontend and backend in a different terminal for each one `cd backend` and `cd frontend`
+- Run `npm install` and `npm run dev`
+- In the `backend` folder create a `.env` file with the follwing contents
+```
+DB_HOST=localhost
+DB_PASSWORD=mysecretpassword
+```
+- You can still run `docker-compose up` to start the database locally
+- Once you've completed these steps you can go to `http://localhost:3000` to see the application running
+
+#### Running Everything on Docker
+
+Run the following command to start the application. You can visit the frontend on `http://localhost:3000`
 ```
 docker compose up
 ```
+
 
