@@ -8,7 +8,24 @@ services:
       - MYSQL_ROOT_PASSWORD=mysecretpassword
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_PASSWORD=mysecretpassword
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
+    depends_on:
+      - backend
+      
+    

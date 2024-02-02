@@ -3,10 +3,12 @@ import cors from 'cors';
 import mysql from 'mysql2/promise';
 import fs from 'fs'
 import path from 'path';
-import parser from 'csv-parse';
 import { handleCSVFile, handleJSONFile, handleLogFile, readFileDirectory, replaceUuids } from './helper';
 import { fetchUuidNameMappings, getName, fetchRevisionMappings, fetchTrialMappings } from './db';
 import dotenv from 'dotenv';
+import decompress from 'decompress';
+
+
 
 const directory = path.join(__dirname, '../files')
 //For env File 
